@@ -1,23 +1,53 @@
-import React, {useEffect, useRef} from 'react'
-import {View, Text, SafeAreaView, ScrollView, TouchableOpacity, Image} from 'react-native';
-import {ArrowLeftIcon, BookmarkIcon, MapPinIcon} from "react-native-heroicons/outline";
+import React, {useEffect, useRef, useState} from 'react'
+import {View, Text, SafeAreaView, ScrollView, TouchableOpacity, Image, TextInput} from 'react-native';
+import {ArrowLeftIcon, BookmarkIcon, MapPinIcon, HeartIcon as HeartIconOutline} from "react-native-heroicons/outline";
+import {HeartIcon as HeartIconSolid} from "react-native-heroicons/solid";
 import {useNavigation} from "@react-navigation/native";
 import {themeColors} from "../theme";
 import IngredientItem from "../components/IngredientItem";
 import InstructionParagraph from "../components/InstructionParagraph";
+import StorageService from "../service/StorageService";
 
 export default function RecipeScreen({route}) {
+    const recipe = route.params
+
     const navigation = useNavigation()
     const scrollRef = useRef();
-    const recipe = route.params
+    const [storedRecipe, setStoredRecipe] = useState(null);
+    const [note, setNote] = useState('')
 
     useEffect(() => {
         scrollRef.current?.scrollTo({
             y : 0,
             animated : false
         })
+
+        StorageService.readRecipeData(recipe.idMeal)
+            .then(data => {
+                if (data) {
+                    setStoredRecipe({id: data.id, name: data.name, note: data.note})
+                    setNote(data.note)
+                }
+            })
     }, [route.params])
-    
+
+    const changeFavStatus = () => {
+        if (storedRecipe) {
+            StorageService.removeRecipeFromFavourites(storedRecipe.id)
+            setStoredRecipe(null)
+        } else {
+            let actualRecipe = {id: recipe.idMeal, name: recipe.strMeal, note: ''}
+            StorageService.saveRecipe(actualRecipe)
+            setStoredRecipe(actualRecipe)
+        }
+    }
+
+    const saveNote = (text) => {
+        storedRecipe.note = note
+        setNote(text)
+        StorageService.saveRecipe(storedRecipe)
+    }
+
     const parseIngredient = () => {
         const ingredients = []
         if (!recipe)
@@ -50,9 +80,19 @@ export default function RecipeScreen({route}) {
                 </TouchableOpacity>
                 <View className="grow flex-row justify-center">
                     <Text className="text-2xl font-bold">
-                        {recipe?.strMeal}
+                        {recipe?.strMeal}/{recipe.idMeal}
                     </Text>
                 </View>
+
+                <TouchableOpacity
+                    onPress={event => changeFavStatus()}
+                    style={{backgroundColor: themeColors.orange}}
+                    className="rounded-full p-2 right-2"
+                >
+                    {storedRecipe ?
+                        <HeartIconSolid color='white'/> : <HeartIconOutline color='white' />
+                    }
+                </TouchableOpacity>
             </View>
             <ScrollView
                 contentContainerStyle={{
@@ -103,6 +143,27 @@ export default function RecipeScreen({route}) {
                         <InstructionParagraph key={index} index={index + 1} instruction={paragraph}/>
                     )}
                 </View>
+
+                {
+                    storedRecipe &&
+                    <>
+                        <Text className="w-full text-lg font-bold mb-2">
+                            Note
+                        </Text>
+                        <View className="w-full border rounded-lg border-gray-500 p-2 mb-10">
+                            <TextInput
+                                multiline={true}
+                                numberOfLines={8}
+                                placeholder='...'
+                                className="w-full min-h-full"
+                                style={{ minHeight: 200}}
+                                value={note}
+                                onChangeText={text => saveNote(text)}
+                                // onEndEditing={saveNote}
+                            />
+                        </View>
+                    </>
+                }
 
             </ScrollView>
         </SafeAreaView>

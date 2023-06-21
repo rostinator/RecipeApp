@@ -22,7 +22,7 @@ export default function RecipeCard({item}) {
                     className="h-56 w-96 rounded-t-xl"
                     source={{uri: item.strMealThumb}}/>
                 <View className="px-3 py-1">
-                    <Text className="text-lg font-bold pt-2">{item.strMeal}</Text>
+                    <Text className="text-lg font-bold pt-2">{item.strMeal}/{item.idMeal}</Text>
                     <View className="flex-row items-center space-x-1 py-3 pr-2">
                         <MapPinIcon color={themeColors.border}/>
                         <Text className="text-gray-500 text-sm">{item.strArea}</Text>

@@ -5,7 +5,7 @@ import {
 import {AdjustmentsVerticalIcon, MagnifyingGlassIcon} from "react-native-heroicons/outline";
 import {themeColors} from "../theme"
 import RecipeCard from "../components/RecipeCard";
-import RecipeService from "../RecipeService";
+import RecipeService from "../service/RecipeService";
 
 export default function HomeScreen() {
     const [recipeList, setRecipeList] = useState([])
@@ -19,7 +19,7 @@ export default function HomeScreen() {
     return (
         <SafeAreaView>
             <View className="flex-row items-center space-x-3 px-5 mb-3">
-                <View className="flex-row flex-1 items-center p-2 rounded-full border border-gray-500 ">
+                <View className="flex-row flex-1 items-center p-2 rounded-full border border-gray-500">
                     <MagnifyingGlassIcon size='30' color={themeColors.border}/>
                     <TextInput
                         className="ml-2 flex-1 w-2 font-bold"

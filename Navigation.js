@@ -3,19 +3,20 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react'
 import HomeScreen from './screens/HomeScreen';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import RecipeScreen from './screens/RecipeScreen';
 import {
-    CircleStackIcon as CircleStackIconSolid,
+    HeartIcon as HeartIconSolid,
     CogIcon as CogIconSolid,
     HomeIcon as HomeIconSolid
 } from 'react-native-heroicons/solid';
 import {
-    CircleStackIcon as CircleStackIconOutline,
+    HeartIcon as HeartIconOutline,
     CogIcon as CogIconOutline,
     HomeIcon as HomeIconOutline
 } from 'react-native-heroicons/outline';
 import SettingScreen from "./screens/SettingScreen";
 import {themeColors} from "./theme";
+import FavouriteScreen from "./screens/FavouriteScreen";
+import RecipeScreen from "./screens/RecipeScreen";
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -30,13 +31,19 @@ export default function Navigation() {
                     options={{headerShown: false}}
                 />
                 <Stack.Screen
-                    name='Recipe'
-                    component={RecipeScreen}
+                    name='Favourite'
+                    component={FavouriteScreen}
                     options={{headerShown: false}}
                 />
                 <Stack.Screen
                     name='Setting'
                     component={SettingScreen}
+                    options={{headerShown: false}}
+                />
+
+                <Stack.Screen
+                    name='recipe'
+                    component={RecipeScreen}
                     options={{headerShown: false}}
                 />
             </Stack.Navigator>
@@ -58,7 +65,7 @@ function TabNavigation() {
             })}
         >
             <Tab.Screen name='home' component={HomeScreen}/>
-            <Tab.Screen name='recipe' component={RecipeScreen}/>
+            <Tab.Screen name='favourite' component={FavouriteScreen}/>
             <Tab.Screen name='setting' component={SettingScreen}/>
         </Tab.Navigator>
     )
@@ -71,9 +78,9 @@ const menuIcon = (route, focused) => {
             menuIcon = focused ? <HomeIconSolid size='38' color='white'/> :
                 <HomeIconOutline strokeWidth={2} size='30' color='white'/>
             break
-        case 'recipe':
-            menuIcon = focused ? <CircleStackIconSolid size='38' color='white'/> :
-                <CircleStackIconOutline strokeWidth={2} size='30' color='white'/>
+        case 'favourite':
+            menuIcon = focused ? <HeartIconSolid size='38' color='white'/> :
+                <HeartIconOutline strokeWidth={2} size='30' color='white'/>
             break
         case 'setting':
             menuIcon = focused ? <CogIconSolid size='38' color='white'/> :
