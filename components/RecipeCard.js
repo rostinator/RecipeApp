@@ -22,16 +22,25 @@ export default function RecipeCard({item}) {
                     className="h-56 w-96 rounded-t-xl"
                     source={{uri: item.strMealThumb}}/>
                 <View className="px-3 py-1">
-                    <Text className="text-lg font-bold pt-2">{item.strMeal}/{item.idMeal}</Text>
-                    <View className="flex-row items-center space-x-1 py-3 pr-2">
-                        <MapPinIcon color={themeColors.border}/>
-                        <Text className="text-gray-500 text-sm">{item.strArea}</Text>
-                        <View className="flex-1 flex-row-reverse">
-                            <View style={{backgroundColor: themeColors.orange}} className="rounded-lg">
-                                <Text  className="text-white font-bold p-2 ">{item.strCategory}</Text>
-                            </View>
+                    <Text className="text-lg font-bold pt-2 pb-3">{item.strMeal}</Text>
+                    {(item.strArea || item.strCategory) &&
+                        <View className="flex-row items-center space-x-1 pb-3 pr-2">
+                            {item.strArea &&
+                                <>
+                                    <MapPinIcon color={themeColors.border}/>
+                                    <Text className="text-gray-500 text-sm">{item.strArea}</Text>
+                                </>
+                            }
+
+                            {item.strCategory &&
+                                <View className="flex-1 flex-row-reverse">
+                                    <View style={{backgroundColor: themeColors.orange}} className="rounded-lg">
+                                        <Text className="text-white font-bold p-2 ">{item.strCategory}</Text>
+                                    </View>
+                                </View>
+                            }
                         </View>
-                    </View>
+                    }
                 </View>
             </View>
         </TouchableHighlight>

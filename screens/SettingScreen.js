@@ -5,7 +5,7 @@ export default function SettingScreen() {
 
     return(
         <SafeAreaView>
-            <Text>Setting</Text>
+            <Text></Text>
         </SafeAreaView>
     )
 }

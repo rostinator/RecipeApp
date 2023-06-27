@@ -11,21 +11,10 @@ class StorageService {
     }
 
     saveRecipe(recipe) {
-        // this.readAllFavourites().then(data => {
-        //     let newArr = [...data]
-        //     newArr.push(recipe)
-        //     this.save(newArr)
-        // })
-
         AsyncStorage.setItem(FAV_KEY + recipe.id, JSON.stringify(recipe))
     }
 
     removeRecipeFromFavourites(id) {
-        // this.readAllFavourites().then(data => {
-        //     let newArr = data.filter(data => data.id !== id)
-        //     this.save(newArr)
-        // })
-
         AsyncStorage.removeItem(FAV_KEY + id)
     }
 

@@ -7,14 +7,21 @@ import {themeColors} from "../theme";
 import IngredientItem from "../components/IngredientItem";
 import InstructionParagraph from "../components/InstructionParagraph";
 import StorageService from "../service/StorageService";
+import RecipeService from "../service/RecipeService";
 
 export default function RecipeScreen({route}) {
-    const recipe = route.params
-
     const navigation = useNavigation()
     const scrollRef = useRef();
     const [storedRecipe, setStoredRecipe] = useState(null);
     const [note, setNote] = useState('')
+    const [recipe, setRecipe] = useState(null)
+
+    const searchRecipeById = (id) =>{
+        RecipeService.searchRecipeById(id)
+            .then(result => {
+                setRecipe(result?.data?.meals[0])
+            })
+    }
 
     useEffect(() => {
         scrollRef.current?.scrollTo({
@@ -22,13 +29,24 @@ export default function RecipeScreen({route}) {
             animated : false
         })
 
-        StorageService.readRecipeData(recipe.idMeal)
-            .then(data => {
-                if (data) {
-                    setStoredRecipe({id: data.id, name: data.name, note: data.note})
-                    setNote(data.note)
-                }
-            })
+        if (route.params.id) {
+            searchRecipeById(route.params.id)
+            setStoredRecipe(route.params)
+            setNote(route.params.note)
+        } else {
+            if (!route.params.strArea || route.params.strCategory) {
+                searchRecipeById(route.params.idMeal)
+            } else {
+
+            }
+            StorageService.readRecipeData(route.params?.idMeal)
+                .then(data => {
+                    if (data) {
+                        setStoredRecipe({id: data.id, name: data.name, note: data.note})
+                        setNote(data.note)
+                    }
+                })
+        }
     }, [route.params])
 
     const changeFavStatus = () => {
@@ -65,7 +83,7 @@ export default function RecipeScreen({route}) {
     }
 
     const parseInstructions = () => {
-        return recipe?.strInstructions.split('\r\n').filter(n => n)
+        return recipe?.strInstructions?.split('\r\n').filter(n => n)
     }
 
     return (
@@ -80,7 +98,7 @@ export default function RecipeScreen({route}) {
                 </TouchableOpacity>
                 <View className="grow flex-row justify-center">
                     <Text className="text-2xl font-bold">
-                        {recipe?.strMeal}/{recipe.idMeal}
+                        {recipe?.strMeal}
                     </Text>
                 </View>
 
@@ -123,6 +141,11 @@ export default function RecipeScreen({route}) {
                             <Text className="text-gray-500 font-bold p-1">{recipe?.strArea}</Text>
                         </View>
                     }
+                </View>
+                <View className="w-full flex-row-reverse">
+                    <View style={{backgroundColor: themeColors.red}} className="rounded-lg">
+                        <Text  className="text-white font-bold p-2 ">{recipe?.strCategory}</Text>
+                    </View>
                 </View>
 
                 <Text className="w-full mb-1 ml-1 text-lg font-bold">
