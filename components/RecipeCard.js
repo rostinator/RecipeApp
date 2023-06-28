@@ -1,11 +1,10 @@
 import React from "react";
-import {Image, Text, TouchableHighlight, TouchableWithoutFeedback, View} from "react-native";
+import {Image, Text, TouchableHighlight, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {themeColors} from "../theme";
 import {MapPinIcon} from "react-native-heroicons/outline";
 
 export default function RecipeCard({item}) {
-
     const navigation = useNavigation()
 
     return (

@@ -5,18 +5,12 @@ import {themeColors} from "../theme";
 import {HeartIcon} from "react-native-heroicons/solid";
 import {useFocusEffect, useNavigation} from "@react-navigation/native";
 
-export default function FavouriteScreen({route}) {
+export default function FavouriteScreen() {
     const [favouriteList, setFavouriteList] = useState([])
     const navigation = useNavigation()
 
-    const loadData = () => {
-        StorageService.readAllFavourites().then(data =>
-            setFavouriteList(data)
-        )
-    }
-
     useFocusEffect(() => {
-        loadData()
+        StorageService.readAllFavourites().then(data => setFavouriteList(data))
     })
 
     return (

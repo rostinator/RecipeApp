@@ -16,7 +16,7 @@ export default function RecipeScreen({route}) {
     const [note, setNote] = useState('')
     const [recipe, setRecipe] = useState(null)
 
-    const searchRecipeById = (id) =>{
+    const searchRecipeById = (id) => {
         RecipeService.searchRecipeById(id)
             .then(result => {
                 setRecipe(result?.data?.meals[0])
@@ -25,8 +25,8 @@ export default function RecipeScreen({route}) {
 
     useEffect(() => {
         scrollRef.current?.scrollTo({
-            y : 0,
-            animated : false
+            y: 0,
+            animated: false
         })
 
         if (route.params.id) {
@@ -88,7 +88,7 @@ export default function RecipeScreen({route}) {
 
     return (
         <SafeAreaView>
-            <View className="flex-row items-center pb-3">
+            <View className="flex-row items-center justify-between pb-3">
                 <TouchableOpacity
                     onPress={event => navigation.goBack()}
                     style={{backgroundColor: themeColors.orange}}
@@ -96,11 +96,9 @@ export default function RecipeScreen({route}) {
                 >
                     <ArrowLeftIcon color='white'/>
                 </TouchableOpacity>
-                <View className="grow flex-row justify-center">
-                    <Text className="text-2xl font-bold">
-                        {recipe?.strMeal}
-                    </Text>
-                </View>
+                <Text className="text-2xl font-bold overflow-clip max-w-xs">
+                    {recipe?.strMeal}
+                </Text>
 
                 <TouchableOpacity
                     onPress={event => changeFavStatus()}
@@ -108,7 +106,7 @@ export default function RecipeScreen({route}) {
                     className="rounded-full p-2 right-2"
                 >
                     {storedRecipe ?
-                        <HeartIconSolid color='white'/> : <HeartIconOutline color='white' />
+                        <HeartIconSolid color='white'/> : <HeartIconOutline color='white'/>
                     }
                 </TouchableOpacity>
             </View>
@@ -144,7 +142,7 @@ export default function RecipeScreen({route}) {
                 </View>
                 <View className="w-full flex-row-reverse">
                     <View style={{backgroundColor: themeColors.red}} className="rounded-lg">
-                        <Text  className="text-white font-bold p-2 ">{recipe?.strCategory}</Text>
+                        <Text className="text-white font-bold p-2 ">{recipe?.strCategory}</Text>
                     </View>
                 </View>
 
@@ -179,7 +177,7 @@ export default function RecipeScreen({route}) {
                                 numberOfLines={8}
                                 placeholder='...'
                                 className="w-full min-h-full"
-                                style={{ minHeight: 200}}
+                                style={{minHeight: 200}}
                                 value={note}
                                 onChangeText={text => saveNote(text)}
                                 // onEndEditing={saveNote}

@@ -77,8 +77,7 @@ export default function FilterTabView({searchText, setSearchText, setSearchType}
                 renderScene={renderScene}
                 onIndexChange={setIndex}
                 initialLayout={{width: layout.width}}
-                renderTabBar={props =>
-                    tabBar(props)}
+                renderTabBar={props => tabBar(props)}
             />
         </View>
     )

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Modal, Text, TextInput, TouchableHighlight, View} from "react-native";
 import {AdjustmentsVerticalIcon, MagnifyingGlassIcon, MapPinIcon} from "react-native-heroicons/outline";
 import {themeColors} from "../theme";
@@ -29,9 +29,9 @@ export default function SearchBar({setRecipeList}) {
             return;
         }
 
-        setSearchType('actualPosition')
         let location = await Location.getCurrentPositionAsync({});
         setLocation(location);
+        setSearchType('actualPosition')
 
         const reverseGeocodedAddress = await Location.reverseGeocodeAsync({
             longitude: location.coords.longitude,
@@ -43,9 +43,20 @@ export default function SearchBar({setRecipeList}) {
     }
 
     const fullTextSearch = (text) => {
+        if (searchText === text) {
+            return
+        }
         setSearchText(text)
         setSearchType('fulltext')
         searchRecipes()
+    }
+
+    const openFilterModal = () => {
+        setShowFilter(true)
+    }
+
+    const closeFilterModal = () => {
+        setShowFilter(false)
     }
 
     const clearFilters = () => {
@@ -95,7 +106,7 @@ export default function SearchBar({setRecipeList}) {
                                     Filters
                                 </Text>
                                 <TouchableHighlight
-                                    onPress={event => setShowFilter(false)}
+                                    onPress={event => closeFilterModal()}
                                     className="rounded-full p-2"
                                     underlayColor={themeColors.lightBorder}
                                 >
@@ -109,7 +120,8 @@ export default function SearchBar({setRecipeList}) {
                                     className="rounded-full border border-amber-500 p-2"
                                     underlayColor={themeColors.lightBorder}
                                 >
-                                    <MapPinIcon size={25} color={(searchType === 'actualPosition' ? 'white' : themeColors.orange)}/>
+                                    <MapPinIcon size={25}
+                                                color={(searchType === 'actualPosition' ? 'white' : themeColors.orange)}/>
                                 </TouchableHighlight>
                                 {errorMsg && <Text className="ml-2">{errorMsg}</Text>}
                                 {
@@ -147,7 +159,7 @@ export default function SearchBar({setRecipeList}) {
                     {(searchType !== 'fulltext' && searchText) ?
                         <View className="ml-2 flex-1 flex-row items-center">
                             <View
-                                className="rounded-xl py-1.5 px-2 bg-gray-500"
+                                className="rounded-xl py-1 px-2 bg-gray-400"
                             >
                                 <Text
                                     className="text-sm text-white"
@@ -165,14 +177,16 @@ export default function SearchBar({setRecipeList}) {
                         </View>
                         :
                         <TextInput
+                            autoComplete='off'
                             className="ml-2 flex-1 w-2 font-bold"
                             placeholder='Recipes'
+                            value={searchText}
                             onChangeText={newText => fullTextSearch(newText)}
                         />
                     }
                 </View>
                 <TouchableHighlight
-                    onPress={event => setShowFilter(actual => !actual)}
+                    onPress={event => openFilterModal()}
                     style={{backgroundColor: themeColors.orange}} className="rounded-full p-2"
                     underlayColor={themeColors.lightBg}
                 >
